@@ -1,31 +1,16 @@
-const triggers = document.querySelectorAll('.cool > li');
-const background = document.querySelector('.dropdownBackground');
-const nav = document.querySelector('.top');
+const speed = document.querySelector('.speed');
+const bar = document.querySelector('.speed-bar');
+const video = document.querySelector('.flex');
 
-function handleEnter() {
-    this.classList.add('trigger-enter');
-    setTimeout(() => this.classList.contains('trigger-enter') && this.classList.add('trigger-enter-active'), 150);
-    background.classList.add('open');
+speed.addEventListener('mousemove', function(e){
+    const y = e.pageY - this.offsetTop;
+    const percent = y / this.offsetHeight;
+    const min = .4;
+    const max = 4;
+    const height = Math.round(percent *100)+ '%';
+    const playbackRate = percent * (max-min) + min;
+    bar.textContent = playbackRate.toFixed(2) + 'x';
+    bar.style.height = height;
 
-    const dropdown = this.querySelector('.dropdown');
-    const dropdownCoords = dropdown.getBoundingClientRect();
-    const navCoords = nav.getBoundingClientRect();
-    const coords = {
-        height: dropdownCoords.height,
-        width: dropdownCoords.width,
-        top: dropdownCoords.top - navCoords.top,
-        left: dropdownCoords.left - navCoords.left
-    };
-    console.log(coords);
-    background.style.setProperty('width', `${coords.width}px`);
-    background.style.setProperty('height', `${coords.height}px`);
-    background.style.setProperty('transform', `translate(${coords.left}px, ${coords.top}px)`);
-};
-
-function handleLeave() {
-    this.classList.remove('trigger-enter', 'trigger-enter-active');
-    background.classList.remove('open');
-}
-
-triggers.forEach(item => item.addEventListener('mouseenter', handleEnter));
-triggers.forEach(item => item.addEventListener('mouseleave', handleLeave));
+    video.playbackRate = playbackRate;
+});
